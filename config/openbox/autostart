@@ -1,0 +1,56 @@
+# -- Obviux -autostart conf: Start ----------
+# -- for /etc/openbox/autostart
+
+# GNOME PolicyKit and Keyring
+eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
+
+# Set root window colour
+hsetroot -solid "#DDBB11" &
+
+# Group start:
+(\ 
+compton --start && \
+sleep 2s && \
+tint2 \
+) &
+
+# Volume control for systray
+(sleep 2s && pnmixer) &
+
+# Volume keys daemon
+xfce4-volumed &
+
+# Enable power management
+xfce4-power-manager &
+
+# Start Thunar Daemon
+thunar --daemon &
+
+# Detect and configure touchpad. See 'man synclient' for more info.
+if egrep -iq 'touchpad' /proc/bus/input/devices; then
+    synclient VertEdgeScroll=1 &
+    synclient TapButton1=1 &
+fi
+
+# Start xscreensaver
+xscreensaver -no-splash &
+
+# Start Clipboard manager
+(sleep 3s && clipit) &
+
+# Keyboard settings - 250 ms delay and 25 cps (characters per second) repeat rate.
+xset r rate 250 25 &
+
+# Turn on/off system beep
+xset b off &
+
+# apply custom keymap
+xmodmap ~/.xmodmap-`uname -n`
+
+# start 3 terminal windows
+tilda &
+sleep 1
+tilda &
+terminator -mb &&
+
+# -- Obviux -autostart conf: End ---------- 
