@@ -1,2 +1,3 @@
 # obviux
-Openbox &amp; NeoVim -centric Ultralight Debian Desktop Experience
+Work In Progress - Untested
+Openbox &amp; NeoVim -centric Ultralight Debian Stretch Desktop Experience
