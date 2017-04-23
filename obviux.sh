@@ -15,6 +15,8 @@ obviux_version="0.0.1"
 path_obviux="/usr/share/obviux"
 path_log="${path_obviux}/install-log.txt"
 path_autostart="/etc/xdg/openbox/autostart"
+url_repository="https://github.com/csmr/obviux/blob/master"
+
 interactive_flag="n"
 bugcheck_flag="n"
 
@@ -37,15 +39,15 @@ desktop_pack=(
 
   # Media stuff
   alsa-base alsa-utils volumeicon-alsa lame 
-	pulseaudio pulseaudio-module-x11 pavucontrol
+  pulseaudio pulseaudio-module-x11 pavucontrol
   xfburn thunar-archive-plugin thunar-media-tags-plugin
   vlc vlc-plugin-notify
 
   # GTK utilities
-	gparted gdebi geeqie evince 
+  gparted gdebi geeqie evince 
   gimp gimp-plugin-registry 
   geany geany-plugins gnome-keyring gtrayicon
-	gnumeric galculator gigolo catfish gsimplecal
+  gnumeric galculator gigolo catfish gsimplecal
 
   # net stuff
   ftp rsync sshfs whois openssh-client
@@ -58,8 +60,8 @@ desktop_pack=(
 desktop_pack_norecs=(
 
   tint2 lxappearance
-	terminator tilda
-	thunar thunar-volman 
+  terminator tilda
+  thunar thunar-volman 
   xfce4-power-manager xfce4-notifyd libnotify-bin 
   gtk2-engines-murrine gtk2-engines-pixbuf gtk2-engines
 
@@ -73,7 +75,7 @@ desktop_pack_norecs=(
 
   # utils
   mc ranger 
-	file-roller synaptic clipit
+  file-roller synaptic clipit
   zenity wmctrl xinput xsel xdotool python-xdg suckless-tools gmrun
   scrot xfce4-screenshooter viewnior hsetroot xscreensaver
   bc gksu fbxkb htop rpl cowsay figlet dmz-cursor-theme
@@ -82,20 +84,21 @@ desktop_pack_norecs=(
   # fonts
   fonts-dejavu fonts-droid ttf-freefont ttf-liberation
 
-	# dev tools
-	git git-svn	curl vim-tiny vim-nox nvim
+  # dev tools
+  git git-svn curl vim-tiny vim-nox nvim
+
 )
 
 function show_help {
-    echo "Obviux - ob-desktop  $obviux_version
-    run this script as root with:
-    # ./obviux.sh [--option [--..]]
+  echo "Obviux - ob-desktop  $obviux_version
+  run this script as root with:
+  # ./obviux.sh [--option [--..]]
 
-    Options:
-      --ignore - Do NOT stop on any errors found
-      --nobugcheck - Do NOT install listbugs to check for known issues
-      --interactive - Stop and wait for user after each install piece"
-    exit 1
+  Options:
+  --ignore - Do NOT stop on any errors found
+  --nobugcheck - Do NOT install listbugs to check for known issues
+  --interactive - Stop and wait for user after each install piece"
+  exit 1
 }
 
 # exit on any error
@@ -109,19 +112,19 @@ exec > >(tee $path_log) 2>&1
 
 # installs packges given in arg-array
 function apt_get_runner {
-    # if any arguments were given, add them to apt-get call
-    apt_args=(-q -y)
-    log "Installing $*" 
-    apt-get "${apt_args[@]}" install "$@" 
-    log "Finished Installing $*\n"
-    
-    if [ "$interactive_flag" == "y" ]; then
-        read -p "Press [Enter] key to continue...";
-    fi
+# if any arguments were given, add them to apt-get call
+apt_args=(-q -y)
+log "Installing $*" 
+apt-get "${apt_args[@]}" install "$@" 
+log "Finished Installing $*\n"
+
+if [ "$interactive_flag" == "y" ]; then
+  read -p "Press [Enter] key to continue...";
+fi
 }
 
 function log {
-    echo -e "$@"
+echo -e "$@"
 }
 
 # Handle command line arguments
@@ -164,10 +167,10 @@ apt-get upgrade
 apt_get_runner policykit-1
 
 if [ "$bugcheck_flag" == "y" ]; then
-    echo "***** ALIAS SETUP *****"
-    echo alias hld='echo "alias hld = sudo apt-mark hold app_name" ; sudo apt-mark hold' >> ~/.bashrc 
-    echo alias unhld='echo "alias unhld = sudo apt-mark unhold app_name" ; sudo apt-mark unhold' >> ~/.bashrc 
-    apt_get_runner apt-listbugs
+  echo "***** ALIAS SETUP *****"
+  echo alias hld='echo "alias hld = sudo apt-mark hold app_name" ; sudo apt-mark hold' >> ~/.bashrc 
+  echo alias unhld='echo "alias unhld = sudo apt-mark unhold app_name" ; sudo apt-mark unhold' >> ~/.bashrc 
+  apt_get_runner apt-listbugs
 fi
 
 # Enable non-free repo - for unrar and flashplayer
@@ -188,28 +191,27 @@ command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
 
 # Part I - end
 
+
+
 log "*** Part II - Config"
- 
+
 # Get Openbox config-presets from GitHub -repo
-wget -nc https://raw.githubusercontent.com/csmr/obviux/master/config 
+wget -nc "${url_repository}/configs.tgz"
+tar -xzv configs.tgz
 cp -r ./config ~/.config
 
-# autostart conf
-cat "${path_obviux}/.config/openbox/autostart" > "$path_autostart"
+# add autostart conf for obviux
+cat "${path_obviux}/config/openbox/autostart.xdg" > "$path_autostart"
 
-# todo set tilda to popup with "Menu" -key
-## sed -ie 's/^key = ".*"/key = "Menu"/' .config/tilda/config_0
-
-# gksu run in sudo mode
+# gksu run in sudo mode - gnomey
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo 
 update-gconf-defaults 
-
-
 
 # Part II - end
 
 
-log "*** Part III - Theme"
+
+log "*** Part III - Theme - wip"
 wget -nc https://github.com/shimmerproject/Greybird/archive/master.zip 
 unzip -q master.zip 
 # cd Greybird-master
@@ -220,6 +222,7 @@ unzip -q master.zip
 # cd
 
 # Part III - end
+
 
 
 log "*** Part IV"
@@ -244,7 +247,6 @@ vrms
 
 # Part IV - end
 
-# Done
-log "*** O'boy! Obviux has installed a desktop to your Debian Stretch."
+log "*** obviux.sh has installed a desktop to your Debian Stretch."
 echo "*** You can find logs in '$path_log'"
 echo "Please restart your computer. ('shutdown -r now')"
