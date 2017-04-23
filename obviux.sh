@@ -1,10 +1,10 @@
 #!/bin/bash
 
-obviux_version="0.0.1"
+obviux_version="0.0.3"
 
 # Obviux - netinstall to OB desktop
 #
-# - First install debian netinstall - no desktops, only system utilities
+# - First install debian netinstall, user & root accounts - no desktops, only system utilities
 # 1. Login as root, download this script:
 #     $ wget -nc https://raw.githubusercontent.com/csmr/obviux/master/obviux.sh
 # 2. enable exection flag after check:
@@ -193,11 +193,10 @@ command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
 
 
 
-log "*** Part II - Config"
+log "*** Part II - Configs"
 
-# Get Openbox config-presets from GitHub -repo
-wget -nc "${url_repository}/configs.tgz"
-tar -xzvf configs.tgz
+# Get config-presets from Obvius GitHub -repo
+wget -nc "${url_repository}/configs.tgz" && tar -xzvf configs.tgz
 
 # copy presets for every user
 for d in /home/*; do cp -ir config "$d/.config"; done 
