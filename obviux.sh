@@ -13,7 +13,7 @@ obviux_version="0.0.1"
 #     $ ./obviux.sh
 
 path_obviux="/usr/share/obviux"
-path_log="${path_obviux}/install-log.txt"
+path_log="${path_obviux}/install.log"
 path_autostart="/etc/xdg/openbox/autostart"
 url_repository="https://github.com/csmr/obviux/blob/master"
 
@@ -197,8 +197,10 @@ log "*** Part II - Config"
 
 # Get Openbox config-presets from GitHub -repo
 wget -nc "${url_repository}/configs.tgz"
-tar -xzv configs.tgz
-cp -r ./config ~/.config
+tar -xzvf configs.tgz
+
+# copy presets for every user
+for d in /home/*; do cp -ir config "$d/.config"; done 
 
 # add autostart conf for obviux
 cat "${path_obviux}/config/openbox/autostart.xdg" > "$path_autostart"
