@@ -15,7 +15,7 @@ obviux_version="0.0.3"
 path_obviux="/usr/share/obviux"
 path_log="${path_obviux}/install.log"
 path_autostart="/etc/xdg/openbox/autostart"
-url_repository="https://github.com/csmr/obviux/blob/master"
+url_repository="https://raw.githubusercontent.com/csmr/obviux/blob/master"
 
 interactive_flag="n"
 bugcheck_flag="n"
@@ -38,8 +38,7 @@ desktop_pack=(
   unrar unace unalz unzip lzop rzip zip xz-utils arj bzip2
 
   # Media stuff
-  alsa-base alsa-utils volumeicon-alsa lame 
-  pulseaudio pulseaudio-module-x11 pavucontrol
+  lame pulseaudio pasystray pavucontrol
   xfburn thunar-archive-plugin thunar-media-tags-plugin
   vlc vlc-plugin-notify
 
@@ -50,10 +49,10 @@ desktop_pack=(
   gnumeric galculator gigolo catfish gsimplecal
 
   # net stuff
-  ftp rsync sshfs whois openssh-client
-  wireless-tools xchat xtightvncviewer
+  pidgin transmission-gtk
   iceweasel net-tools nmap ufw gufw
-  transmission-gtk
+	ftp rsync sshfs whois openssh-client
+  wireless-tools xtightvncviewer
 
 )
 
@@ -82,10 +81,11 @@ desktop_pack_norecs=(
   vrms
 
   # fonts
-  fonts-dejavu fonts-droid ttf-freefont ttf-liberation
+  fonts-dejavu fonts-hack-ttf fonts-hack-web 
+ 	ttf-freefont ttf-liberation
 
   # dev tools
-  git git-svn curl vim-tiny vim-nox nvim
+  git git-svn curl vim-tiny vim-nox neovim
 
 )
 
@@ -196,13 +196,15 @@ command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
 log "*** Part II - Configs"
 
 # Get config-presets from Obvius GitHub -repo
-wget -nc "${url_repository}/configs.tgz" && tar -xzvf configs.tgz
+cd $path_obviux
+wget -nc "${url_repository}/configs.tgz"
+tar -xzvf configs.tgz
 
 # copy presets for every user
 for d in /home/*; do cp -ir config "$d/.config"; done 
 
 # add autostart conf for obviux
-cat "${path_obviux}/config/openbox/autostart.xdg" > "$path_autostart"
+cat "${path_obviux}/config/openbox/autostart.xdg" >> "$path_autostart"
 
 # gksu run in sudo mode - gnomey
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo 
