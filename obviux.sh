@@ -173,7 +173,7 @@ if [ "$bugcheck_flag" == "y" ]; then
   apt_get_runner apt-listbugs
 fi
 
-# Enable non-free repo - for unrar and flashplayer
+# Enable non-free repo - for unrar and firmware
 log "***** ENABLING NON-FREE REPO *****"
 echo "deb http://http.debian.net/debian testing contrib non-free" > /etc/apt/sources.list.d/stretch.contrib.nonfree.list 
 apt-get update
