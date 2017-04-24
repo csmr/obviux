@@ -1,13 +1,13 @@
 #!/bin/bash
 
-obviux_version="0.0.3"
+obviux_version="0.0.4"
 
 # Obviux - netinstall to OB desktop
 #
 # - First install debian netinstall, user & root accounts - no desktops, only system utilities
 # 1. Login as root, download this script:
 #     $ wget -nc https://raw.githubusercontent.com/csmr/obviux/master/obviux.sh
-# 2. enable exection flag after check:
+# 2. enable exection flag after md5-check:
 #     $ chmod +x obviux.sh
 # 3. and run it:
 #     $ ./obviux.sh
