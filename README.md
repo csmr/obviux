@@ -8,13 +8,13 @@
 2. In a root shell, install git, clone obviux -repo, and run obviux.sh
 	```shell
 	apt install git
-	git clone git@github.com:csmr/obviux.git
+	git clone https://github.com/csmr/obviux.git
 	cd obviux
 	chmod +x obviux.sh
 	./obviux.sh
 	```
 
-- The base desktop should install in 20 minutes. The main menu works by right-click on desktop, terminal popup with <F2>.
+- The base desktop should install in 20 minutes. The main menu works by right-click on desktop, terminal popup with F2.
 
-- Alternative install: download `obviux.sh` and `configs.tgz` to target computer with wget, or use usb-transfer. Validate installer with with `md5sum obviux.sh`, enable +x -flag and run.
+- Alternative install: transfer `obviux.sh` and `config`-dir to target computer (with wget, usb-transfer). Validate installer with with `md5sum obviux.sh`, enable +x -flag and run.
 
