@@ -4,8 +4,8 @@
 # GNOME PolicyKit and Keyring
 eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &
 
-# Set root window colour
-hsetroot -solid "#DDBB11" &
+# Set root window gradient
+hsetroot -add "#000055" -add "#3344ff" -gradient 20 &
 
 # Group start:
 (\ 

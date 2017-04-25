@@ -201,7 +201,7 @@ wget -nc "${url_repository}/configs.tgz"
 tar -xzvf configs.tgz
 
 # copy presets for every user
-for d in /home/*; do cp -ir config "$d/.config"; done 
+for d in /home/*; do cp -ir config "$d/.config"; mv "$d/.config/.vimrc" "$d/"; done 
 
 # add autostart conf for obviux
 cat "${path_obviux}/config/openbox/autostart.xdg" >> "$path_autostart"
