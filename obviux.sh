@@ -1,21 +1,20 @@
 #!/bin/bash
 
-obviux_version="0.0.4"
+obviux_version="0.0.5"
 
 # Obviux - netinstall to OB desktop
 #
-# - First install debian netinstall, user & root accounts - no desktops, only system utilities
-# 1. Login as root, download this script:
-#     $ wget -nc https://raw.githubusercontent.com/csmr/obviux/master/obviux.sh
-# 2. enable exection flag after md5-check:
-#     $ chmod +x obviux.sh
+# 0. Install debian testing  netinstall, user & root accounts - no desktops, only base system utilities
+# 1. Login as root, clone this repo:
+#   # git clone git@github.com/csmr/obviux
+#   # cd obviux
 # 3. and run it:
-#     $ ./obviux.sh
+#		# chmod +x obviux.sh
+#   # ./obviux.sh
 
 path_obviux="/usr/share/obviux"
 path_log="${path_obviux}/install.log"
 path_autostart="/etc/xdg/openbox/autostart"
-url_repository="https://raw.githubusercontent.com/csmr/obviux/blob/master"
 
 interactive_flag="n"
 bugcheck_flag="n"
@@ -105,22 +104,24 @@ function show_help {
 set -e 
 
 # enter install path
-mkdir -p "${path_obviux}" && cd "$_" 
+mkdir -p "$path_obviux"
+cp -r ../obviux/* "$path_obviux"
+cd "$path_obviux" 
 
 # log everything
 exec > >(tee $path_log) 2>&1  
 
-# installs packges given in arg-array
+# installs packges given as argument-array
 function apt_get_runner {
-# if any arguments were given, add them to apt-get call
-apt_args=(-q -y)
-log "Installing $*" 
-apt-get "${apt_args[@]}" install "$@" 
-log "Finished Installing $*\n"
+	# if arguments given, add them to apt-get call
+	apt_args=(-q -y)
+	log "Installing $*" 
+	apt-get "${apt_args[@]}" install "$@" 
+	log "Finished Installing $*\n"
 
-if [ "$interactive_flag" == "y" ]; then
-  read -p "Press [Enter] key to continue...";
-fi
+	if [ "$interactive_flag" == "y" ]; then
+		read -p "Press [Enter] key to continue...";
+	fi
 }
 
 function log {
@@ -178,7 +179,6 @@ log "***** ENABLING NON-FREE REPO *****"
 echo "deb http://http.debian.net/debian testing contrib non-free" > /etc/apt/sources.list.d/stretch.contrib.nonfree.list 
 apt-get update
 apt_get_runner "${desktop_pack[@]}"
-cd 
 apt_get_params+=('--no-install-recommends')
 apt_get_runner "${desktop_pack_norecs[@]}"
 apt_get_params=()
@@ -194,11 +194,6 @@ command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
 
 
 log "*** Part II - Configs"
-
-# Get config-presets from Obvius GitHub -repo
-cd $path_obviux
-wget -nc "${url_repository}/configs.tgz"
-tar -xzvf configs.tgz
 
 # copy presets for every user
 for d in /home/*; do cp -ir config "$d/.config"; mv "$d/.config/.vimrc" "$d/"; done 
