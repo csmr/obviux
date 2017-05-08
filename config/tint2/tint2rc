@@ -69,7 +69,7 @@ panel_layer = top
 panel_background_id = 1
 
 # Panel Autohide
-autohide = 1
+autohide = 0
 autohide_show_timeout = 0.3
 autohide_hide_timeout = 1.5
 autohide_height = 6
@@ -139,7 +139,7 @@ time1_format = %H:%M
 time1_font = Liberation Sans 11
 #time2_format = %A %d %B
 #time2_font = Liberation Sans 6
-lock_font_color = #F57900 100
+clock_font_color = #F57900 100
 clock_padding = 12 4
 clock_background_id = 0
 clock_lclick_command = gsimplecal

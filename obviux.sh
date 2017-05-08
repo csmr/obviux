@@ -1,16 +1,32 @@
 #!/bin/bash
 
 obviux_version="0.0.5"
+function show_help {
+  echo "
+	Obviux - netinstall to OB desktop
+	echo $obviux_version 
 
-# Obviux - netinstall to OB desktop
-#
-# 0. Install debian testing  netinstall, user & root accounts - no desktops, only base system utilities
-# 1. Login as root, clone this repo:
-#   # git clone git@github.com/csmr/obviux
-#   # cd obviux
-# 3. and run it:
-#		# chmod +x obviux.sh
-#   # ./obviux.sh
+	Get Obviux:
+  0. Install debian testing  netinstall, user & root accounts - no desktops, only base system utilities
+	1. Login as root, clone this repo:
+		# git clone git@github.com/csmr/obviux
+		# cd obviux
+ 3. and run it:
+		# chmod +x obviux.sh
+		# ./obviux.sh
+
+	Usage:
+	Obviux - ob-desktop 
+	As root in a base (headless) debian testing netinstall,
+	run this script as root with:
+  # ./obviux.sh [--option [--..]]
+
+  Options:
+  --ignore - Do NOT stop on any errors found
+  --nobugcheck - Do NOT install listbugs to check for known issues
+  --interactive - Stop and wait for user after each install piece"
+  exit 1
+}
 
 path_obviux="/usr/share/obviux"
 path_log="${path_obviux}/install.log"
@@ -45,7 +61,7 @@ desktop_pack=(
   gparted gdebi geeqie evince 
   gimp gimp-plugin-registry 
   geany geany-plugins gnome-keyring gtrayicon
-  gnumeric galculator gigolo catfish gsimplecal
+  libreoffice galculator gigolo gsimplecal
 
   # net stuff
   pidgin transmission-gtk
@@ -88,18 +104,6 @@ desktop_pack_norecs=(
 
 )
 
-function show_help {
-  echo "Obviux - ob-desktop  $obviux_version
-  run this script as root with:
-  # ./obviux.sh [--option [--..]]
-
-  Options:
-  --ignore - Do NOT stop on any errors found
-  --nobugcheck - Do NOT install listbugs to check for known issues
-  --interactive - Stop and wait for user after each install piece"
-  exit 1
-}
-
 # exit on any error
 set -e 
 
@@ -125,7 +129,7 @@ function apt_get_runner {
 }
 
 function log {
-echo -e "$@"
+	echo -e "$@"
 }
 
 # Handle command line arguments
@@ -188,6 +192,7 @@ apt_get_params=()
 command -v curl || { echo >&2 "part I install curl fail"; exit 1; }
 command -v nmap || { echo >&2 "part I install nmap fail"; exit 1; }
 command -v ex || { echo >&2 "part I install ex (vim) fail"; exit 1; }
+command --version libreoffice || { echo >&2 "part I install libreoffice fail"; exit 1; }
 
 # Part I - end
 
@@ -198,10 +203,14 @@ log "*** Part II - Configs"
 # copy presets for every user
 for d in /home/*; do cp -ir config "$d/.config"; mv "$d/.config/.vimrc" "$d/"; done 
 
-# add autostart conf for obviux
+cp /var/lib/openbox/debian-menu.xml ~/.config/openbox/debian-menu.xml 
+cp /etc/xdg/openbox/menu.xml ~/.config/openbox/menu.xml.base
+cp /etc/xdg/openbox/rc.xml ~/.config/openbox/rc.xml
+
+# add openbox autostart 
 cat "${path_obviux}/config/openbox/autostart.xdg" >> "$path_autostart"
 
-# gksu run in sudo mode - gnomey
+# gksu run in sudo mode - for gnome-apps auth
 update-alternatives --set libgksu-gconf-defaults /usr/share/libgksu/debian/gconf-defaults.libgksu-sudo 
 update-gconf-defaults 
 
@@ -223,7 +232,7 @@ unzip -q master.zip
 
 
 
-log "*** Part IV"
+log "*** Part IV - user stuff"
 
 # add initial user to sudoer group
 user_nick=$(getent passwd 1000 | awk -F: '{print $1}')
@@ -236,8 +245,8 @@ echo "%sudo ALL = (ALL:ALL) ALL" > sud.tmp
 chmod 0440 sud.tmp
 mv sud.tmp /etc/sudoers.d/all.users 
 
-#games not in roots PATH
-/usr/games/cowsay -W20 -e "^^" "Sudoing is now enabled for all (future) users." 
+#run mascot (as initial user, safe)
+su - c 'cowsay -f daemon -W20 -e "^^" "Sudoing is now enabled for all (future) users."' "$user_nick"
 
 # Log data on how open source the package set is
 echo "*** Non-free packages:"
