@@ -19,7 +19,8 @@ chmod +x obviux.sh
 
 - The base desktop should install in ~20 minutes. The main menu works by right-click on desktop, terminal popup with Menu -key.
 
-#### Alternative install: transfer `obviux.sh` and `config`-dir to target computer (with wget/usb-transfer). Validate installer with with `md5sum obviux.sh`, enable +x -flag and run.
+#### Alternative install
+Transfer `obviux.sh` and `config`-dir to target computer (with wget/usb-transfer). Validate installer with with `md5sum obviux.sh`, enable +x -flag and run.
 
 #### WIP
 This installer is a work in progress. It should work(TM), each version is tested on a vm, but is not done yet. Help is much appreciated.
